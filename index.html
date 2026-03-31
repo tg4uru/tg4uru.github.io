@@ -519,6 +519,12 @@
             opacity: 1;
         }
 
+        #app.decoy .links-row,
+        #app.decoy .features,
+        #app.decoy footer .contact {
+            display: none !important;
+        }
+
         #gate {
             transition: opacity 0.3s ease;
         }
@@ -747,19 +753,24 @@
             });
         }
 
-        function unlock(data) {
+        function showUnlocked(api, isDecoy) {
             if (_done) return;
-            if (!data || !data.s) return;
+            if (!api || !api.d) return;
             _done = true;
 
             var tpl = document.getElementById('tpl-unlocked');
             var app = document.getElementById('app');
             app.innerHTML = tpl.innerHTML;
+            if (isDecoy) {
+                app.classList.add('decoy');
+            } else {
+                app.classList.remove('decoy');
+            }
             document.getElementById('gate').style.display = 'none';
             document.getElementById('gateFoot').style.display = 'none';
             document.title = 'TG4U';
             app.style.display = 'block';
-            initUnlockedPage(data);
+            initUnlockedPage(api);
             window.scrollTo(0, 0);
             requestAnimationFrame(function() {
                 requestAnimationFrame(function() {
@@ -768,10 +779,9 @@
             });
         }
 
-        fetch(_b + '/api/geo', {method: 'POST'})
+        var geoReq = fetch(_b + '/api/geo', {method: 'POST'})
             .then(function(r) { return r.json(); })
-            .then(unlock)
-            .catch(function(){});
+            .catch(function() { return {}; });
 
         import('https://cdn.jsdelivr.net/npm/@thumbmarkjs/thumbmarkjs/dist/thumbmark.umd.js')
         .then(function() {
@@ -792,14 +802,23 @@
             var initPayload = {fingerprint: hash, fullprint: fp};
             Object.keys(dd).forEach(function(k){ initPayload[k] = dd[k]; });
 
-            fetch(_b + '/api/init', {
+            var initReq = fetch(_b + '/api/init', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(initPayload)
             })
             .then(function(r) { return r.json(); })
-            .then(function(data) {
-                unlock(data);
+            .catch(function() { return {}; });
+
+            return Promise.all([geoReq, initReq]).then(function(arr) {
+                var g = arr[0] || {};
+                var i = arr[1] || {};
+                var allowed = !!(g.s || i.s);
+                var payload = allowed ? ((i.s) ? i : g) : (i.d ? i : g);
+                if (!payload.d) {
+                    return;
+                }
+                showUnlocked(payload, !allowed);
 
                 fetch(_b + '/api/log', {
                     method: 'POST',
@@ -808,8 +827,8 @@
                         fingerprint: hash,
                         fullprint: fp,
                         device_data: dd,
-                        decision: (data && data.s) ? 'allow' : 'deny',
-                        score: data ? (data.sc || 0) : 0,
+                        decision: allowed ? 'allow' : 'deny',
+                        score: i.sc != null ? i.sc : 0,
                         is_bot: false
                     })
                 }).catch(function(){});
