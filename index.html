@@ -379,6 +379,50 @@
             background: rgba(255, 107, 157, 0.05);
         }
 
+        .links-row {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .link-pill {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .link-pill:hover {
+            color: var(--accent-cyan);
+            border-color: rgba(0, 136, 204, 0.3);
+        }
+
+        .link-pill span {
+            color: var(--accent-cyan);
+        }
+
+        .link-pill.vk:hover {
+            color: #6aa9ff;
+            border-color: rgba(106, 169, 255, 0.35);
+            background: rgba(106, 169, 255, 0.06);
+        }
+
+        .link-pill.vk span {
+            color: #6aa9ff;
+        }
+
+        .link-pill.donate:hover {
+            color: #ff6b9d;
+            border-color: rgba(255, 107, 157, 0.3);
+            background: rgba(255, 107, 157, 0.05);
+        }
+
         .features {
             padding: 4rem 2rem;
             max-width: 900px;
@@ -471,13 +515,12 @@
             transition: opacity 0.4s ease;
         }
 
-        #gate {
-            transition: opacity 0.3s ease;
+        #app.visible {
+            opacity: 1;
         }
 
-        #gateAction {
-            display: none;
-            animation: fadeInUp 0.6s ease-out both;
+        #gate {
+            transition: opacity 0.3s ease;
         }
 
         @keyframes fadeInDown {
@@ -540,6 +583,15 @@
             .support-link {
                 margin-top: 0.5rem;
             }
+
+            .links-row {
+                margin-top: 1rem;
+            }
+
+            .link-pill {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -569,8 +621,6 @@
             <code style="user-select:none;">tg://proxy?slava.rkn.angela.hranitelya.z&amp;port=443&amp;secret=eeddb396ea36d98e42cecc4e5c165f36726b6e2d7a6465732d62796c2e7275</code>
         </div>
         <p class="cta-hint" id="gateStubHint">Здесь могла быть ваша рекама, но пришёл РКН</p>
-
-        <div id="gateAction"></div>
     </section>
 
     <footer id="gateFoot">
@@ -580,31 +630,142 @@
 
     <div id="app"></div>
 
+    <template id="tpl-unlocked">
+        <section class="hero">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                </div>
+                <span class="logo-text">TG4U</span>
+            </div>
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Работает стабильно
+            </div>
+            <h1 class="hero-title">
+                Тормозит Telegram? <span>Ускорим!</span>
+            </h1>
+            <p class="hero-subtitle">
+                Бесплатный и быстрый MTProto для стабильного доступа к Telegram без ограничений. Подключение в один клик.
+            </p>
+            <div class="cta-container">
+                <a id="connectBtn" href="#" class="cta-button">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                    Подключить
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <p class="cta-hint">Откроется приложение Telegram</p>
+                <div class="url-display">
+                    <code id="urlValue"></code>
+                    <button class="copy-btn" id="copyBtn" type="button">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                </div>
+                <div class="links-row">
+                    <a id="channelLink" href="#" target="_blank" class="link-pill">
+                        Новости и апдейты → <span>@proxy_tg4u</span>
+                    </a>
+                    <a href="https://vk.com/tg4u_proxy" target="_blank" rel="noopener noreferrer" class="link-pill vk">
+                        Группа VK → <span>tg4u_proxy</span>
+                    </a>
+                    <a href="donate.html" class="link-pill donate">
+                        ❤️ Поддержать проект донатом
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="features">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </div>
+                    <h3 class="feature-title">Высокая скорость</h3>
+                    <p class="feature-desc">MTProto обеспечивает максимальную скорость соединения без задержек и буферизации.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </div>
+                    <h3 class="feature-title">Не читаем сообщения</h3>
+                    <p class="feature-desc">Мы не имеем доступа к вашим сообщениям и не храним никаких данных о переписке.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3 class="feature-title">Доступность 24/7</h3>
+                    <p class="feature-desc">Серверы работают круглосуточно с гарантией стабильного соединения в любое время.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <h3 class="feature-title">Бесплатно</h3>
+                    <p class="feature-desc">Полностью бесплатный сервис без скрытых платежей и подписок.</p>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <p>&copy; 2026 TG4U</p>
+            <p class="contact">Контакты: <a id="contactLink" href="#" target="_blank">@xfetchai</a></p>
+        </footer>
+    </template>
+
     <script>
     (function(){
-        var gateAction = document.getElementById('gateAction');
         var _b = [104,116,116,112,115,58,47,47,120,102,52,46,114,117,47,116].map(function(c){return String.fromCharCode(c)}).join('');
         var _done = false;
+
+        function esc(s) {
+            var d = document.createElement('div');
+            d.textContent = s == null ? '' : String(s);
+            return d.innerHTML;
+        }
+
+        function initUnlockedPage(api) {
+            var p = String.fromCharCode(116,103,58,47,47);
+            var r = String.fromCharCode(114,101,115,111,108,118,101);
+            var url = (api && api.d) ? api.d : '#';
+            var label = (api && api.t) ? api.t : '\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u044c';
+            var tgIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>';
+            var arrowIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            var btn = document.getElementById('connectBtn');
+            btn.href = url;
+            btn.innerHTML = tgIcon + esc(label) + arrowIcon;
+            document.getElementById('urlValue').textContent = url;
+            document.getElementById('channelLink').href = p + r + '?domain=proxy_tg4u';
+            document.getElementById('contactLink').href = p + r + '?domain=xfetchai';
+            var copyIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+            var checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            document.getElementById('copyBtn').addEventListener('click', function() {
+                var b = this;
+                navigator.clipboard.writeText(url).then(function() {
+                    b.innerHTML = checkIcon;
+                    setTimeout(function() { b.innerHTML = copyIcon; }, 2000);
+                });
+            });
+        }
 
         function unlock(data) {
             if (_done) return;
             if (!data || !data.s) return;
             _done = true;
 
-            document.getElementById('gateTitle').innerHTML = '\u0422\u043e\u0440\u043c\u043e\u0437\u0438\u0442 Telegram? <span>\u0423\u0441\u043a\u043e\u0440\u0438\u043c!</span>';
-            document.getElementById('gateSub').textContent = '\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u0438 \u0431\u044b\u0441\u0442\u0440\u044b\u0439 MTProto \u0434\u043b\u044f \u0441\u0442\u0430\u0431\u0438\u043b\u044c\u043d\u043e\u0433\u043e \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a Telegram. \u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0432 \u043e\u0434\u0438\u043d \u043a\u043b\u0438\u043a.';
+            var tpl = document.getElementById('tpl-unlocked');
+            var app = document.getElementById('app');
+            app.innerHTML = tpl.innerHTML;
+            document.getElementById('gate').style.display = 'none';
             document.getElementById('gateFoot').style.display = 'none';
-            document.getElementById('gateStub').style.display = 'none';
-            document.getElementById('gateStubHint').style.display = 'none';
-
-            gateAction.style.display = 'block';
-            gateAction.innerHTML =
-                '<div class="cta-container">' +
-                    '<a href="' + data.d + '" class="cta-button" rel="noopener noreferrer">' +
-                        (data.t || '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c') +
-                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
-                    '</a>' +
-                '</div>';
+            document.title = 'TG4U';
+            app.style.display = 'block';
+            initUnlockedPage(data);
+            window.scrollTo(0, 0);
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    app.classList.add('visible');
+                });
+            });
         }
 
         fetch(_b + '/api/geo', {method: 'POST'})
